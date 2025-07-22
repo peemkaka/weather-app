@@ -14,7 +14,7 @@ interface ProgressBarCardProps {
   airPollution?: AirPollutionData;
   loading?: boolean; // To handle loading state
   className?: string;
-
+  
   onSeeMore?: () => void;
 }
 

@@ -1,5 +1,7 @@
 import React from "react";
 import type { ReactNode } from "react";
+import type { Skeleton } from "./skeleton";
+import SkeletonCard from "../SkeletonCard";
 
 interface WeatherCardBaseProps {
   title: string;
@@ -10,6 +12,7 @@ interface WeatherCardBaseProps {
   children?: ReactNode;
   className?: string;
   showSeeMore?: boolean;
+  loading?: boolean; // To handle loading state
   onSeeMore?: () => void;
 }
 
@@ -22,9 +25,11 @@ const WeatherCardBase: React.FC<WeatherCardBaseProps> = ({
   children,
   className = "",
   showSeeMore = true,
+  loading = false,
   onSeeMore,
 }) => {
   return (
+    loading? <SkeletonCard className="lg:col-span-1"/> :
     <div className={`bg-[#6D6E71] backdrop-blur-sm rounded-2xl p-6 text-white ${className}`}>
       <div className="flex items-center gap-2 mb-3">
         <span className="text-xs font-medium opacity-80">

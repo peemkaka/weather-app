@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import SnowBackdrop from "../SnowBackdrop";
 import useWeather from "../../hooks/useWeather";
 import Header from "../Header";
@@ -23,8 +24,11 @@ function Home() {
     clearAirPollution,
   } = useAirPollution();
 
-  const { sevenHourData, fetchWeather: fetchSevenHourWeather } =
-    useSevenHourWeather();
+  const {
+    loading: sevenLoading,
+    sevenHourData,
+    fetchWeather: fetchSevenHourWeather,
+  } = useSevenHourWeather();
   const [showSnow, setShowSnow] = useState(false);
 
   const averageHigh = 34; // สมมติค่าเฉลี่ย
@@ -94,15 +98,34 @@ function Home() {
 
         <main className="p-6">
           {/* Search Bar */}
-          <div className="w-1/2 mx-auto mb-6 flex">
+          <motion.div
+            className="w-1/2 mx-auto mb-6 flex"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.6,
+              ease: "easeOut",
+              delay: 0.2,
+            }}
+          >
             <SearchBar
               onSearch={handleSearch}
               placeholder="Enter city name (e.g., Bangkok, London)"
             />
-          </div>
+          </motion.div>
 
           {/* Weather Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut",
+              delay: 0.4,
+              staggerChildren: 0.1,
+            }}
+          >
             {/* Home Card */}
             <WeatherCard
               weatherData={
@@ -116,29 +139,41 @@ function Home() {
                   icon: "",
                 }
               }
-              loading={loading}
-            />
-
-            {/* UV Index Card */}
-            <ProgressBarCard
               loading={airPollutionLoading}
-              airPollution={airPollution}
-              title="Air Quality ( PM2.5 )"
-              icon="☀️"
-              value={airPollutionLoading ? "Loading.." : "0"}
-              description={
-                airPollutionLoading ? "Loading air quality data..." : "Low"
-              }
-              additionalInfo="Low for the rest of the day"
             />
+            {/* UV Index Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              <ProgressBarCard
+                loading={airPollutionLoading}
+                airPollution={airPollution}
+                title="Air Quality ( PM2.5 )"
+                icon="☀️"
+                value={airPollutionLoading ? "Loading.." : "0"}
+                description={
+                  airPollutionLoading ? "Loading air quality data..." : "Low"
+                }
+                additionalInfo="Low for the rest of the day"
+              />
+            </motion.div>
 
             {/* Sunrise Card */}
-            <SunriseCard
-              title={"SUNRISE"}
-              icon="🌅"
-              sunriseTime={weatherData?.sunrise ?? ""}
-              sunsetTime={weatherData?.sunset ?? ""}
-            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+            >
+              <SunriseCard
+                title={"SUNRISE"}
+                icon="🌅"
+                sunriseTime={weatherData?.sunrise ?? ""}
+                sunsetTime={weatherData?.sunset ?? ""}
+                loading={airPollutionLoading}
+              />
+            </motion.div>
 
             {/* Visibility Card */}
             <WeatherCardBase
@@ -150,12 +185,14 @@ function Home() {
                   : "Unknown"
               }
               description={"Limited due to snowfall"}
+              loading={airPollutionLoading}
             />
 
             {/* 7 Hour Forecast */}
             <SevenDayForecastCard
               title="7 hours latest forecast"
               forecastData={sevenHourData?.list ?? []}
+              loading={airPollutionLoading}
             />
             {/* Wind Card */}
             <WindCard
@@ -165,9 +202,11 @@ function Home() {
               windUnit="m/s"
               windDegree={weatherData?.windDegree || 0}
               windDirection={"↑"}
+              loading={airPollutionLoading}
             />
             {/* Humidity Card */}
             <WeatherCardBase
+              loading={airPollutionLoading}
               title="HUMIDITY"
               icon="💧"
               value={`${weatherData?.humidity || 0}%`}
@@ -175,6 +214,7 @@ function Home() {
             />
             {/* Feels Like Card */}
             <WeatherCardBase
+              loading={airPollutionLoading}
               title="FEELS LIKE"
               icon="🌡️"
               value={
@@ -186,6 +226,7 @@ function Home() {
 
             {/* Averages Card */}
             <WeatherCardBase
+              loading={airPollutionLoading}
               title="AVERAGES"
               icon="📊"
               value={todayTemp + "°"}
@@ -195,6 +236,7 @@ function Home() {
 
             {/* Rainfall Card */}
             <WeatherCardBase
+              loading={airPollutionLoading}
               title="RAINFALL"
               icon="🌧️"
               value="4 mm"
@@ -204,6 +246,7 @@ function Home() {
 
             {/* Air Quality Card */}
             <ProgressBarCard
+              loading={airPollutionLoading}
               title="AIR QUALITY"
               icon="🏭"
               value="45"
@@ -211,7 +254,7 @@ function Home() {
               additionalInfo="Same as yesterday"
               progressWidth="w-5/12"
             />
-          </div>
+          </motion.div>
 
           {error && (
             <div className="mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center">

@@ -1,11 +1,13 @@
 import React from "react";
 import WeatherCardBase from "./WeatherCardBase";
+import SkeletonCard from "../SkeletonCard";
 interface SunriseCardProps {
   title: string;
   icon?: string;
   sunriseTime: string;
   sunsetTime: string;
   className?: string;
+  loading?: boolean; // To handle loading state
   onSeeMore?: () => void;
 }
 
@@ -15,9 +17,12 @@ const SunriseCard: React.FC<SunriseCardProps> = ({
   sunriseTime,
   sunsetTime,
   className,
+  loading = false,
   onSeeMore,
 }) => {
-  return (
+  return loading ? (
+    <SkeletonCard className="lg:col-span-1" />
+  ) : (
     <WeatherCardBase
       title={title}
       icon={icon}

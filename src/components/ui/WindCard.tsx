@@ -9,6 +9,7 @@ interface WindCardProps {
   windDegree?: number; // Optional for wind direction in degrees
   windDirection?: string;
   className?: string;
+  loading?: boolean; // To handle loading state
   onSeeMore?: () => void;
 }
 
@@ -19,6 +20,7 @@ const WindCard: React.FC<WindCardProps> = ({
   windUnit = "m/s",
   windDegree,
   windDirection,
+  loading = false,
   className,
   onSeeMore,
 }) => {
@@ -26,10 +28,11 @@ const WindCard: React.FC<WindCardProps> = ({
     <WeatherCardBase
       title={title}
       icon={icon}
-      value=""
+      value=""  
       className={className}
       onSeeMore={onSeeMore}
       showSeeMore={true}
+      loading={loading}
     >
       {/* Wind compass */}
       <div className="flex items-center justify-center my-4">

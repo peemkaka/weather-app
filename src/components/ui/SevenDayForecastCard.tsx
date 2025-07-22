@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/th";
 import { WiDaySunny } from "react-icons/wi";
+import SkeletonCard from "../SkeletonCard";
 
 // Configure dayjs
 dayjs.extend(relativeTime);
@@ -14,6 +15,7 @@ interface SevenDayForecastCardProps {
   icon?: string;
   forecastData: WeatherData[];
   className?: string;
+  loading?: boolean; // To handle loading state
   onSeeMore?: () => void;
 }
 
@@ -22,6 +24,7 @@ const SevenDayForecastCard: React.FC<SevenDayForecastCardProps> = ({
   icon,
   forecastData,
   className = "",
+  loading = false,
   onSeeMore,
 }) => {
   // Function to format time text
@@ -75,7 +78,9 @@ const SevenDayForecastCard: React.FC<SevenDayForecastCardProps> = ({
     return "🌡️"; // default
   };
 
-  return (
+  return loading ? (
+    <SkeletonCard className="lg:col-span-2 lg:row-span-2" />
+  ) : (
     <div
       className={`bg-[#6D6E71] backdrop-blur-sm rounded-2xl p-6 text-white lg:row-span-2 lg:col-span-2 ${className}`}
     >
@@ -100,9 +105,7 @@ const SevenDayForecastCard: React.FC<SevenDayForecastCardProps> = ({
               <p className="text-sm opacity-80">ความชื้น {day.humidity}%</p>
               <p className="text-xs opacity-70">{day.description}</p>
             </div>
-            <div>
-              {getWeatherIcon(day.description) || ""}
-            </div>
+            <div>{getWeatherIcon(day.description) || ""}</div>
           </div>
         ))}
       </div>
